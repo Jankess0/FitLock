@@ -4,5 +4,11 @@
   "version": "1.0.0",
   "action": {
     "default_popup": "index.html"
+  },
+  "permissions": ["identity", "storage"],
+  "host_permissions": ["https://www.strava.com/*"],
+  "background": {
+    "service_worker": "src/background/authService.ts",
+    "type": "module"
   }
 }

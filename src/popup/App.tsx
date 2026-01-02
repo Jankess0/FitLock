@@ -1,35 +1,77 @@
-import { useState } from 'react'
-import reactLogo from '../assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import { loginWithStrava } from '../background/authService';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+interface Athlete {
+    firstname: string;
+    lastname: string;
 }
 
-export default App
+function App() {
+    const [isLogged, setIsLogged] = useState<boolean>(false);
+    const [athlete, setAthlete] = useState<Athlete | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    const checkAuth = async () => {
+        interface StravaData {
+            strava_token?: string;
+            strava_expires_at: number;
+            athlete: Athlete;
+        }
+
+        const data = (await chrome.storage.local.get(['strava_token', 'strava_expires_at', 'strava_athlete'])) as StravaData;
+        const now = Math.floor(Date.now() / 1000);
+
+        if (data.strava_token && data.strava_expires_at > now) {
+            setIsLogged(true);
+            setAthlete(data.strava_athlete)
+        }
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        const initAuth = async () => {
+            await checkAuth();
+        };
+
+        initAuth();
+    }, []);
+
+
+    const handleLogin = async () => {
+        const success = await loginWithStrava();
+        if (success) {
+            await checkAuth();
+        }
+    };
+
+    const handleLogout = async () => {
+        await chrome.storage.local.clear();
+        setIsLogged(false);
+        setAthlete(null);
+    };
+
+    if (loading) return <div>Ładowanie...</div>;
+
+    return (
+        <div>
+            {isLogged ? (
+                <div>
+                    <h1>Witaj, {athlete?.firstname}!</h1>
+                    <button onClick={handleLogout} >
+                        Wyloguj
+                    </button>
+                </div>
+            ) : (
+                <div>
+                    <h1>FitLock</h1>
+                    <p>Zaloguj się, aby zsynchronizować treningi.</p>
+                    <button onClick={handleLogin} >
+                        Zaloguj przez Stravę
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+}
+
+export default App;
