@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { loginWithStrava } from '../background/authService';
+import {fetchActivities} from "../background/activityService.ts";
 
 interface Athlete {
     firstname: string;
@@ -24,6 +25,8 @@ function App() {
         if (data.strava_token && data.strava_expires_at > now) {
             setIsLogged(true);
             setAthlete(data.strava_athlete)
+            //wczytywanie aktywnosci uzytkownika
+            await fetchActivities();
         }
         setLoading(false);
     };
@@ -34,6 +37,7 @@ function App() {
         };
 
         initAuth();
+
     }, []);
 
 
