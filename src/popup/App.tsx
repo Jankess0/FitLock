@@ -15,7 +15,7 @@ function App() {
         interface StravaData {
             strava_token?: string;
             strava_expires_at: number;
-            athlete: Athlete;
+            strava_athlete: Athlete;
         }
 
         const data = (await chrome.storage.local.get(['strava_token', 'strava_expires_at', 'strava_athlete'])) as StravaData;
