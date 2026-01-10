@@ -1,81 +1,89 @@
-import { useState, useEffect } from 'react';
-import { loginWithStrava } from '../background/authService';
-import {fetchActivities} from "../background/activityService.ts";
+import { useState } from 'react';
+import { Header } from './components/Header';
+import { Banner } from './components/Banner';
+import { ProfileBadge } from './components/ProfileBadge';
+import { BottomNav, type TabKey } from "./components/BottomNav";
 
-interface Athlete {
-    firstname: string;
-    lastname: string;
-}
+import { useAuth } from './hooks/useAuth';
+import { useActiveTabUrl } from './hooks/useActiveTabUrl';
+import { useDarkMode } from './hooks/useDarkMode';
 
-function App() {
-    const [isLogged, setIsLogged] = useState<boolean>(false);
-    const [athlete, setAthlete] = useState<Athlete | null>(null);
-    const [loading, setLoading] = useState(true);
+import { LoggedOutView } from './views/LoggedOutView';
+import { BlockView } from './views/BlockView';
+import { FocusView } from './views/FocusView';
+import { StatsView } from './views/StatsView';
 
-    const checkAuth = async () => {
-        interface StravaData {
-            strava_token?: string;
-            strava_expires_at: number;
-            strava_athlete: Athlete;
-        }
+export default function App() {
+  const { isLogged, athlete, loading, login, logout } = useAuth();
+  const { currentUrl } = useActiveTabUrl();
+  const { toggleDarkMode } = useDarkMode();
 
-        const data = (await chrome.storage.local.get(['strava_token', 'strava_expires_at', 'strava_athlete'])) as StravaData;
-        const now = Math.floor(Date.now() / 1000);
+  const [activeTab, setActiveTab] = useState<TabKey>('block');
 
-        if (data.strava_token && data.strava_expires_at > now) {
-            setIsLogged(true);
-            setAthlete(data.strava_athlete)
-            //wczytywanie aktywnosci uzytkownika
-            await fetchActivities();
-        }
-        setLoading(false);
-    };
-
-    useEffect(() => {
-        const initAuth = async () => {
-            await checkAuth();
-        };
-
-        initAuth();
-
-    }, []);
-
-
-    const handleLogin = async () => {
-        const success = await loginWithStrava();
-        if (success) {
-            await checkAuth();
-        }
-    };
-
-    const handleLogout = async () => {
-        await chrome.storage.local.clear();
-        setIsLogged(false);
-        setAthlete(null);
-    };
-
-    if (loading) return <div>Ładowanie...</div>;
-
+  if (loading) {
     return (
-        <div>
-            {isLogged ? (
-                <div>
-                    <h1>Witaj, {athlete?.firstname}!</h1>
-                    <button onClick={handleLogout} >
-                        Wyloguj
-                    </button>
-                </div>
-            ) : (
-                <div>
-                    <h1>FitLock</h1>
-                    <p>Zaloguj się, aby zsynchronizować treningi.</p>
-                    <button onClick={handleLogin} >
-                        Zaloguj przez Stravę
-                    </button>
+      <div className="popup-container loading-state">
+        <div className="spinner" />
+        <p>Ładowanie...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="popup-container">
+      <Header isLogged={isLogged} onLogout={logout} onToggleDark={toggleDarkMode} />
+
+      <main className="popup-content">
+        {!isLogged ? (
+            <>
+            <Banner isLogged={isLogged} />
+            <ProfileBadge isLogged={isLogged} avatarSrc={undefined} />
+            <LoggedOutView onLogin={login} />
+            </>
+        ) : (
+            <>
+            {activeTab === "block" && (
+                <div className="info-section">
+                    <h1 className="app-title">Witaj, {athlete?.firstname}!</h1>
+
+                    <div className="url-display">
+                    <span className="url-label">Obecna strona:</span>
+                    <span className="url-value">{currentUrl}</span>
+                    </div>
                 </div>
             )}
-        </div>
-    );
-}
 
-export default App;
+            <div className="action-section">
+                {activeTab === "block" && (
+                <div className="tab-panel tab-panel-block">
+                    <BlockView />
+                </div>
+                )}
+
+                {activeTab === "focus" && (
+                <div className="tab-panel tab-panel-focus">
+                    <FocusView isActive />
+                </div>
+                )}
+
+                {activeTab === "stats" && (
+                <div className="tab-panel tab-panel-stats">
+                    <StatsView />
+                </div>
+                )}
+            </div>
+            </>
+        )}
+        </main>
+
+
+      {isLogged ? (
+        <BottomNav activeTab={activeTab} onChange={setActiveTab} />
+      ) : (
+        <footer className="popup-footer">
+          <span className="version-text">FitLock v1.0.0</span>
+        </footer>
+      )}
+    </div>
+  );
+}

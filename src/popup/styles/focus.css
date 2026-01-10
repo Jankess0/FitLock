@@ -1,0 +1,191 @@
+/* ===== Focus mode banner (gradient jak w HTML) ===== */
+.focus-banner {
+  height: 20px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 18px 18px 0 0;
+
+  background: linear-gradient(135deg, #E0E7FF 0%, #F5F3FF 100%);
+}
+
+html.dark .focus-banner {
+  background: linear-gradient(135deg, #1E1B4B 0%, #2E1065 100%);
+}
+
+.focus-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.22;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.35), transparent 45%),
+    radial-gradient(circle at 85% 70%, rgba(168, 85, 247, 0.30), transparent 55%);
+  pointer-events: none;
+}
+
+.focus-banner-label {
+  position: relative;
+  z-index: 1;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(79, 70, 229, 1);
+}
+
+html.dark .focus-banner-label {
+  color: rgba(129, 140, 248, 1);
+}
+
+/* ===== Card wrapper ===== */
+.focus-wrap {
+  padding: 10px 14px 12px;
+}
+
+.focus-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(226, 232, 240, 0.12);
+  border-radius: 18px;
+  padding: 14px 14px 12px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+
+html.dark .focus-card {
+  background: rgba(15, 23, 42, 0.10);
+  border-color: rgba(148, 163, 184, 0.18);
+}
+
+.focus-icon {
+  width: 56px;
+  height: 64px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(148, 163, 184, 0.15);
+  display: grid;
+  place-items: center;
+
+  margin-top: -26px;
+  margin-bottom: 12px;
+}
+
+html.dark .focus-icon {
+  background: rgba(51, 65, 85, 1);
+  border-color: var(--bg-dark);
+}
+
+.focus-icon-glyph {
+  font-size: 26px;
+  line-height: 1;
+  color: var(--primary);
+}
+
+.focus-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+
+.focus-subtitle {
+  margin: 6px 0 10px;   
+  font-size: 12px;
+  color: rgba(148, 163, 184, 0.9);
+}
+
+html.dark .focus-subtitle {
+  color: rgba(148, 163, 184, 1);
+}
+
+.focus-timer {
+  width: 100%;
+  margin: 6px 0 14px;
+}
+
+.focus-time {
+  display: block;
+  font-size: 48px;      
+  margin-top: 2px;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  font-variant-numeric: tabular-nums;
+}
+
+.focus-progress {
+  width: 100%;
+  height: 10px;          
+  margin-top: 10px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.18);
+  overflow: hidden;
+}
+
+html.dark .focus-progress {
+  background: rgba(51, 65, 85, 1);
+}
+
+.focus-progress-fill {
+  width: 100%;
+  height: 100%;
+  transform-origin: left center;
+  background: linear-gradient(90deg, rgba(252, 76, 2, 1), rgba(252, 76, 2, 0.55));
+  transition: transform 150ms linear;
+}
+
+.focus-actions,
+.focus-finished {
+  width: 100%;
+  display: grid;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.focus-finished-text {
+  margin: 0 0 4px;
+  font-size: 12px;
+  color: rgba(148, 163, 184, 0.9);
+}
+
+html.dark .focus-finished-text {
+  color: rgba(148, 163, 184, 1);
+}
+
+/* ===== Footer note ===== */
+.focus-footer-note {
+  text-align: center;
+  padding: 10px 0 0;
+}
+
+.focus-footer-text {
+  margin: 0;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 800;
+  color: rgba(148, 163, 184, 0.85);
+}
+
+.btn-primary {
+  padding: 12px 16px;    
+}
+
+.btn-secondary-text {
+  height: 42px;          
+}
+
+.tab-panel-focus {
+  border-radius: 18px 18px 0 0;
+
+  overflow: hidden;
+
+  margin-bottom: 0;
+}

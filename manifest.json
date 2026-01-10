@@ -3,9 +3,10 @@
   "name": "FitLock",
   "version": "1.0.0",
   "action": {
-    "default_popup": "index.html"
+    "default_popup": "index.html",
+    "default_icon": "logo-128.png"
   },
-  "permissions": ["identity", "storage"],
+  "permissions": ["identity", "storage", "tabs"],
   "host_permissions": ["https://www.strava.com/*"],
   "background": {
     "service_worker": "src/background/authService.ts",
