@@ -33,7 +33,7 @@ export function useAuth() {
       setAthlete((data.strava_athlete ?? null) as Athlete | null);
 
       // Wczytywanie aktywności użytkownika (jeśli chcesz – możesz to przenieść gdzie indziej)
-      await fetchActivities();
+      fetchActivities().catch(err => console.error("Background fetch failed", err));
     } else {
       setIsLogged(false);
       setAthlete(null);

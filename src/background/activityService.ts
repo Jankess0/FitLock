@@ -8,8 +8,14 @@ export const fetchActivities = async (): Promise<void> => {
         if (!token) {
             throw new Error("Token is null");
         }
-        //TODO fetch only acvitities with current date
-        const response = await fetch(STRAVA_CONFIG.ACTIVITIES_URL + '?per_page=5',{
+        //ustawienie początku dnie bierzącego 0:00:00
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+        const startOfDay = Math.floor(now.getTime() / 1000);
+
+        //pobieramy tylko aktywnosci z bierzącego dnia
+        const url = `${STRAVA_CONFIG.ACTIVITIES_URL}?after=${startOfDay}&per_page=30`;
+        const response = await fetch(url ,{
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -17,12 +23,19 @@ export const fetchActivities = async (): Promise<void> => {
         });
 
         if (!response.ok) {
-            throw new Error("API error occurred");
+            throw new Error('API error occurred: ${response.status}');
         }
 
         //parsowanie danych
-        const data = await response.json();
-        console.log(data);
+        const activities = await response.json();
+        //console.log(activities);
+
+        //zapis listy aktywnosci do chrome.storage
+        await chrome.storage.local.set({
+            'today_activities': activities,
+            'last_fetch_time': Date.now()
+        });
+
 
     } catch (error){
         console.error("Failed to load data:", error);

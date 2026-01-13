@@ -6,10 +6,10 @@
     "default_popup": "index.html",
     "default_icon": "logo-128.png"
   },
-  "permissions": ["identity", "storage", "tabs"],
+  "permissions": ["identity", "storage", "tabs", "alarms"],
   "host_permissions": ["https://www.strava.com/*"],
   "background": {
-    "service_worker": "src/background/authService.ts",
+    "service_worker": "src/background/index.ts",
     "type": "module"
   }
 }
