@@ -78,7 +78,6 @@ const checkStatus = async () => {
 
         console.log('STORNA NA CZARNEJ LISCIE');
 
-        //TODO odkomentowac gdy storage zostanie podlaczony
         const activities = (data.today_activities  || []) as StravaActivity[];
         console.log(activities);
         //const activities = mockActivities as StravaActivity[];
@@ -90,6 +89,13 @@ const checkStatus = async () => {
             showBlocker(progress);
         } else {
             hideBlocker();
+            const currentData = await chrome.storage.local.get('goal_achieved_number') as { goal_achieved_number?: number };
+
+            const currentCount = (currentData.goal_achieved_number || 0) + 1;
+
+            await chrome.storage.local.set({
+                'goal_achieved_number': currentCount
+            });
         }
     } catch (e) {
         console.error("Błąd w sprawdzaniu statusu blokady", e);
