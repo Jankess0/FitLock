@@ -10,11 +10,12 @@ const FALLBACK_GOAL: UserGoal= {
 };
 
 //TODO usunac po podlaczniu do chrome.storage z frontu
-const mockActivities = [
-    { id: 1, start_date_local: "2026-01-14T10:00:00", distance: 3000, moving_time: 900, sport_type: "Run" }, // Dziś, 3km
-   // { id: 2, start_date_local: "2026-01-14T13:00:00", distance: 2000, moving_time: 600, sport_type: "Run" }, // Dziś, 2km
-   // { id: 3, start_date_local: "2026-01-14T10:00:00", distance: 5000, moving_time: 1500, sport_type: "Run" } // Wczoraj (powinno zignorować)
-];
+
+// const mockActivities = [
+//     { id: 1, start_date_local: "2026-01-15T10:00:00", distance: 3000, moving_time: 900, sport_type: "Run" }, // Dziś, 3km
+//     { id: 2, start_date_local: "2026-01-15T13:00:00", distance: 2000, moving_time: 600, sport_type: "Run" }, // Dziś, 2km
+//     { id: 3, start_date_local: "2026-01-15T10:00:00", distance: 5000, moving_time: 1500, sport_type: "Run" } // Wczoraj (powinno zignorować)
+// ];
 //TODO usunac po podlaczeniu do chrome.storage obslugi z frontu
 //do testow normalnie bedzie w storage pod kluczem 'blocked_sites'
 const DEFAULT_BLOCKED_SITES = ['youtube.com'];
@@ -78,8 +79,9 @@ const checkStatus = async () => {
         console.log('STORNA NA CZARNEJ LISCIE');
 
         //TODO odkomentowac gdy storage zostanie podlaczony
-        //const activities = (data.today_activities  || []) as StravaActivity[];
-        const activities = mockActivities as StravaActivity[];
+        const activities = (data.today_activities  || []) as StravaActivity[];
+        console.log(activities);
+        //const activities = mockActivities as StravaActivity[];
         const goal = (data.user_goal as UserGoal) || FALLBACK_GOAL;
 
         const progress = calculateProgress(activities, goal);

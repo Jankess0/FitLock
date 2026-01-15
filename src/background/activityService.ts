@@ -1,4 +1,5 @@
 import { STRAVA_CONFIG } from "../shared/config.ts";
+import type { StravaActivity } from "../shared/types.ts";
 
 export const fetchActivities = async (): Promise<void> => {
     try{
@@ -8,13 +9,18 @@ export const fetchActivities = async (): Promise<void> => {
         if (!token) {
             throw new Error("Token is null");
         }
+        //TODO odkomentowac po testach
+
         //ustawienie początku dnie bierzącego 0:00:00
-        const now = new Date();
-        now.setHours(0, 0, 0, 0);
-        const startOfDay = Math.floor(now.getTime() / 1000);
+        // const now = new Date();
+        // now.setHours(0, 0, 0, 0);
+        // const startOfDay = Math.floor(now.getTime() / 1000);
 
         //pobieramy tylko aktywnosci z bierzącego dnia
-        const url = `${STRAVA_CONFIG.ACTIVITIES_URL}?after=${startOfDay}&per_page=30`;
+        //TODO odkomentowac po testach
+
+        // const url = `${STRAVA_CONFIG.ACTIVITIES_URL}?after=${startOfDay}&per_page=30`;
+        const url = `${STRAVA_CONFIG.ACTIVITIES_URL}?per_page=5`;
         const response = await fetch(url ,{
             method: 'GET',
             headers: {
@@ -22,13 +28,23 @@ export const fetchActivities = async (): Promise<void> => {
             }
         });
 
+
         if (!response.ok) {
-            throw new Error(`API error occurred: ${response.status}`);;
+            throw new Error(`API error occurred: ${response.status}`);
         }
 
         //parsowanie danych
-        const activities = await response.json();
-        //console.log(activities);
+        const rawActivities = await response.json();
+        //console.log(rawActivities);
+
+        const activities: StravaActivity[] = rawActivities.map((item: any) => ({
+            id: item.id,
+            start_date_local: item.start_date_local,
+            distance: item.distance,
+            moving_time: item.moving_time,
+            sport_type: item.sport_type,
+            type: item.type
+        }));
 
         //zapis listy aktywnosci do chrome.storage
         await chrome.storage.local.set({

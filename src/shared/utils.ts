@@ -5,16 +5,19 @@ export const calculateProgress = (
     goal: UserGoal
 ): GoalProgress => {
     //pobieramy dzisiejsza date z przegladarki YYYY-MM-DD
-    const now = new Date();
-    const todayString = now.toLocaleDateString('en-ca')
+    // const now = new Date();
+    // const todayString = now.toLocaleDateString('en-ca')
 
     const currentTotal = activities.reduce((sum, activity) => {
         //formatujemy date
-        const activityDate = activity.start_date_local.substring(0, 10);
 
-        if (activityDate !== todayString) {
-            return sum;
-        }
+        //TODO odkomentowac
+
+        // const activityDate = activity.start_date_local.substring(0, 10);
+        //
+        // if (activityDate !== todayString) {
+        //     return sum;
+        // }
 
         //filtrowanie czy sport sie liczy jesli allowedSports jest puste liczymy wszystko
         const sport = activity.sport_type || activity.type || '';
