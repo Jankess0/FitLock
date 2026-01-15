@@ -23,7 +23,7 @@ export const fetchActivities = async (): Promise<void> => {
         });
 
         if (!response.ok) {
-            throw new Error('API error occurred: ${response.status}');
+            throw new Error(`API error occurred: ${response.status}`);;
         }
 
         //parsowanie danych

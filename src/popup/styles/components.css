@@ -307,8 +307,8 @@ html.dark .url-value {
 .bottom-nav {
   height: 74px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  padding: 10px 8px 12px;
+  grid-template-columns: repeat(4, 1fr); /* było 3 */
+  padding: 10px 6px 12px;               /* było 10px 8px 12px */
   background: var(--surface-light);
   border-top: 1px solid rgba(226, 232, 240, 1);
   flex: 0 0 auto;
@@ -324,11 +324,11 @@ html.dark .bottom-nav {
   display: grid;
   justify-items: center;
   align-content: center;
-  gap: 6px;
+  gap: 5px;             /* było 6px */
   color: rgba(100, 116, 139, 1);
-  font-size: 12px;
+  font-size: 11px;      /* było 12px */
   font-weight: 700;
-  padding: 8px 6px;
+  padding: 6px 4px;     /* było 8px 6px */
   border-radius: 14px;
   transition: background 120ms ease, transform 120ms ease, color 120ms ease;
 }
@@ -343,8 +343,14 @@ html.dark .nav-item:hover {
   color: var(--primary);
   font-weight: 900;
 }
-.nav-icon { font-size: 20px; line-height: 1; }
-.nav-label { line-height: 1; }
+.nav-icon {
+  font-size: 18px;      /* było 20px */
+  line-height: 1;
+}
+.nav-label {
+  line-height: 1;
+  white-space: nowrap;  /* żeby label nie łamał się na 2 linie */
+}
 
 /* Animacja przejścia zakładek */
 .tab-view {

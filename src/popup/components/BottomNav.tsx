@@ -1,4 +1,4 @@
-export type TabKey = 'block' | 'focus' | 'stats';
+export type TabKey = 'block' | 'focus' | 'stats' | 'settings';
 
 export function BottomNav({
   activeTab,
@@ -14,7 +14,7 @@ export function BottomNav({
         onClick={() => onChange('block')}
         type="button"
       >
-        <span className="nav-icon">🛡️</span>
+        <i className="fa-solid fa-shield nav-icon"></i>
         <span className="nav-label">Blokady</span>
       </button>
 
@@ -23,7 +23,7 @@ export function BottomNav({
         onClick={() => onChange('focus')}
         type="button"
       >
-        <span className="nav-icon">⚡</span>
+        <i className="fa-solid fa-bolt nav-icon"></i>
         <span className="nav-label">Skupienie</span>
       </button>
 
@@ -32,8 +32,17 @@ export function BottomNav({
         onClick={() => onChange('stats')}
         type="button"
       >
-        <span className="nav-icon">📊</span>
+        <i className="fa-solid fa-chart-column nav-icon"></i>
         <span className="nav-label">Statystyki</span>
+      </button>
+
+      <button
+        className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`}
+        onClick={() => onChange('settings')}
+        type="button"
+      >
+        <i className="fa-solid fa-gear nav-icon"></i>
+        <span className="nav-label">Ustawienia</span>
       </button>
     </nav>
   );

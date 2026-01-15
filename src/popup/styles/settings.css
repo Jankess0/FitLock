@@ -1,0 +1,261 @@
+/* =========================================
+   Settings View – FitLock
+   Spójny styl (light / dark), bez cieni
+   ========================================= */
+
+/* Wrapper widoku */
+.tab-view {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  justify-items: center;
+  align-items: start;
+  overflow: hidden;
+}
+
+/* Główna karta */
+.settings-card {
+  width: calc(100% - 8px); 
+  max-width: 320px;
+  margin: 0 auto;
+
+  box-sizing: border-box;  
+
+  background: var(--surface-light);
+  border: 1px solid rgba(226, 232, 240, 1);
+  border-radius: 18px;
+
+  padding: 14px;
+  display: grid;
+  gap: 14px;
+}
+
+html.dark .settings-card {
+  background: var(--surface-dark);
+  border-color: rgba(51, 65, 85, 1);
+}
+
+/* Sekcja */
+.settings-row {
+  display: grid;
+  gap: 10px;
+}
+
+/* Label */
+.settings-label {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(51, 65, 85, 0.85);
+}
+
+html.dark .settings-label {
+  color: rgba(226, 232, 240, 0.85);
+}
+
+/* Hint */
+.settings-hint {
+  font-size: 12px;
+  line-height: 1.3;
+  color: rgba(71, 85, 105, 0.85);
+}
+
+html.dark .settings-hint {
+  color: rgba(148, 163, 184, 0.9);
+}
+
+/* =========================================
+   Segmented control
+   ========================================= */
+
+.segmented {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.segmented-btn {
+  padding: 11px 12px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+
+  background: rgba(248, 250, 252, 1);
+  border: 1px solid rgba(226, 232, 240, 1);
+  color: rgba(51, 65, 85, 0.92);
+
+  transition: background 120ms ease, border-color 120ms ease, transform 120ms ease;
+}
+
+.segmented-btn:hover {
+  background: #ffffff;
+  transform: translateY(-1px);
+}
+
+.segmented-btn.active {
+  background: rgba(252, 76, 2, 0.14);
+  border-color: rgba(252, 76, 2, 0.45);
+  color: rgba(15, 23, 42, 0.95);
+}
+
+html.dark .segmented-btn {
+  background: rgba(15, 23, 42, 0.18);
+  border-color: rgba(148, 163, 184, 0.18);
+  color: rgba(226, 232, 240, 0.92);
+}
+
+html.dark .segmented-btn:hover {
+  background: rgba(15, 23, 42, 0.26);
+}
+
+html.dark .segmented-btn.active {
+  background: rgba(252, 76, 2, 0.12);
+  border-color: rgba(252, 76, 2, 0.45);
+  color: rgba(255, 255, 255, 0.98);
+}
+
+/* =========================================
+   Input + jednostka
+   ========================================= */
+
+.input-with-unit {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.settings-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 900;
+
+  border-radius: 14px;
+  border: 1px solid rgba(226, 232, 240, 1);
+  background: rgba(248, 250, 252, 1);
+  color: rgba(15, 23, 42, 0.95);
+
+  outline: none;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+.settings-input::placeholder {
+  color: rgba(148, 163, 184, 0.7);
+  font-weight: 700;
+}
+
+.settings-input:focus {
+  border-color: rgba(252, 76, 2, 0.55);
+  background: #ffffff;
+}
+
+html.dark .settings-input {
+  background: rgba(15, 23, 42, 0.18);
+  border-color: rgba(148, 163, 184, 0.18);
+  color: rgba(226, 232, 240, 0.98);
+}
+
+/* Jednostka */
+.unit-pill {
+  padding: 10px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+
+  background: rgba(248, 250, 252, 1);
+  border: 1px solid rgba(226, 232, 240, 1);
+  color: rgba(51, 65, 85, 0.9);
+}
+
+html.dark .unit-pill {
+  background: rgba(15, 23, 42, 0.18);
+  border-color: rgba(148, 163, 184, 0.18);
+  color: rgba(226, 232, 240, 0.95);
+}
+
+/* =========================================
+   Sport buttons
+   ========================================= */
+
+.sport-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.sport-btn {
+  padding: 11px 10px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+
+  background: rgba(248, 250, 252, 1);
+  border: 1px solid rgba(226, 232, 240, 1);
+  color: rgba(51, 65, 85, 0.92);
+
+  transition: background 120ms ease, border-color 120ms ease, transform 120ms ease;
+}
+
+.sport-btn:hover {
+  background: #ffffff;
+  transform: translateY(-1px);
+}
+
+.sport-btn.active {
+  background: rgba(252, 76, 2, 0.14);
+  border-color: rgba(252, 76, 2, 0.45);
+  color: rgba(15, 23, 42, 0.95);
+}
+
+html.dark .sport-btn {
+  background: rgba(15, 23, 42, 0.18);
+  border-color: rgba(148, 163, 184, 0.18);
+  color: rgba(226, 232, 240, 0.92);
+}
+
+html.dark .sport-btn.active {
+  background: rgba(252, 76, 2, 0.12);
+  border-color: rgba(252, 76, 2, 0.45);
+  color: rgba(255, 255, 255, 0.98);
+}
+
+/* =========================================
+   Primary button
+   ========================================= */
+
+.btn-primary {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 18px;
+  border: none;
+
+  background: var(--primary);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+
+  transition: background 120ms ease, transform 120ms ease;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.settings-hint {
+  display: none;
+}

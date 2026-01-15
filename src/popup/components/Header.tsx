@@ -17,7 +17,7 @@ export function Header({ isLogged, onLogout, onToggleDark }: Props) {
           title="Tryb ciemny"
           type="button"
         >
-          <span className="icon-moon">🌙</span>
+          <i className="fa-solid fa-moon"></i>
         </button>
 
         {isLogged && (

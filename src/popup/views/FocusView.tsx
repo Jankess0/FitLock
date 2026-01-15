@@ -34,7 +34,7 @@ export function FocusView({ isActive }: Props) {
       <div className="focus-wrap">
         <div className="focus-card">
           <div className="focus-icon">
-            <span className="focus-icon-glyph">⏱</span>
+            <i className="fa-solid fa-hourglass-end focus-icon-glyph"></i>
           </div>
 
           <h1 className="focus-title">{title}</h1>

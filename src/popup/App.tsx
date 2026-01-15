@@ -12,6 +12,7 @@ import { LoggedOutView } from './views/LoggedOutView';
 import { BlockView } from './views/BlockView';
 import { FocusView } from './views/FocusView';
 import { StatsView } from './views/StatsView';
+import { SettingsView } from './views/SettingsView';
 
 export default function App() {
   const { isLogged, athlete, loading, login, logout } = useAuth();
@@ -69,6 +70,12 @@ export default function App() {
                 {activeTab === "stats" && (
                 <div className="tab-panel tab-panel-stats">
                     <StatsView />
+                </div>
+                )}
+
+                {activeTab === "settings" && (
+                <div className="tab-panel tab-panel-settings">
+                    <SettingsView />
                 </div>
                 )}
             </div>
