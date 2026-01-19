@@ -13,8 +13,13 @@ html.dark .popup-container {
 
 .popup-content {
   flex: 1;
+  min-height: 0;              
   overflow: hidden;
+
+  display: flex;              
+  flex-direction: column;    
 }
+
 
 /* Header */
 .popup-header {
@@ -91,4 +96,13 @@ html.dark .popup-footer {
 .tab-panel-focus {
   margin: -12px -16px -14px; 
   width: calc(100% + 32px);
+}
+
+.tab-panel-block {
+  overflow: visible; 
+}
+
+.tab-panel-block .block-list {
+  max-height: 230px;   
+  overflow-y: auto;
 }

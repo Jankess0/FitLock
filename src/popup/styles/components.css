@@ -1,4 +1,3 @@
-/* Header actions (moon + logout) */
 .header-actions {
   display: flex;
   align-items: center;
@@ -56,7 +55,6 @@ html.dark .logout-mini-btn {
   color: rgba(226, 232, 240, 1);
 }
 
-/* Banner gradient + pattern */
 .banner-area {
   height: 104px;
   width: 100%;
@@ -94,7 +92,6 @@ html.dark .banner-area::before {
   color: rgba(148, 163, 184, 1);
 }
 
-/* Badge z logo/avatara */
 .profile-card-container {
   display: flex;
   justify-content: center;
@@ -138,7 +135,6 @@ html.dark .brand-icon-circle {
   border-radius: 14px;
 }
 
-/* Karta (info + actions) */
 .info-section,
 .action-section {
   width: 100%;
@@ -213,7 +209,6 @@ html.dark .status-desc {
   color: rgba(148, 163, 184, 1);
 }
 
-/* Przyciski */
 .btn-primary {
   width: 100%;
   border: none;
@@ -267,7 +262,6 @@ html.dark .btn-secondary-text {
   color: rgba(226, 232, 240, 1);
 }
 
-/* URL box */
 .url-display {
   width: 100%;
   text-align: left;
@@ -303,12 +297,11 @@ html.dark .url-value {
   color: rgba(226, 232, 240, 1);
 }
 
-/* Bottom nav */
 .bottom-nav {
   height: 74px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* było 3 */
-  padding: 10px 6px 12px;               /* było 10px 8px 12px */
+  grid-template-columns: repeat(4, 1fr); 
+  padding: 10px 6px 12px;              
   background: var(--surface-light);
   border-top: 1px solid rgba(226, 232, 240, 1);
   flex: 0 0 auto;
@@ -324,11 +317,11 @@ html.dark .bottom-nav {
   display: grid;
   justify-items: center;
   align-content: center;
-  gap: 5px;             /* było 6px */
+  gap: 5px;            
   color: rgba(100, 116, 139, 1);
-  font-size: 11px;      /* było 12px */
+  font-size: 11px;     
   font-weight: 700;
-  padding: 6px 4px;     /* było 8px 6px */
+  padding: 6px 4px;    
   border-radius: 14px;
   transition: background 120ms ease, transform 120ms ease, color 120ms ease;
 }
@@ -344,19 +337,56 @@ html.dark .nav-item:hover {
   font-weight: 900;
 }
 .nav-icon {
-  font-size: 18px;      /* było 20px */
+  font-size: 18px;      
   line-height: 1;
 }
 .nav-label {
   line-height: 1;
-  white-space: nowrap;  /* żeby label nie łamał się na 2 linie */
+  white-space: nowrap;  
 }
 
-/* Animacja przejścia zakładek */
 .tab-view {
   animation: tabIn 180ms ease-out;
 }
 @keyframes tabIn {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+.action-section {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;   
+}
+
+.tab-panel {
+  flex: 1 1 auto;
+  min-height: 0;   
+}
+
+.tab-panel-block {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;   
+}
+
+
+.tab-panel-block .block-view {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.tab-panel-block .block-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+
+.tab-view {
+  height: 100%;
+  min-height: 0; 
 }

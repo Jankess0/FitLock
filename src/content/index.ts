@@ -1,108 +1,71 @@
-import type { StravaActivity, UserGoal, GoalProgress} from "../shared/types.ts";
-import { calculateProgress} from "../shared/utils.ts";
-
-//poczatkowe ustawienia celu
-//TODO usunac po obsluzeniu zapisu z frontu
-const FALLBACK_GOAL: UserGoal= {
-    metric: 'distance',
-    targetValue: 5000,
-    allowedSports: []
-};
-
-//TODO usunac po podlaczniu do chrome.storage z frontu
+import { BLOCKED_SITES_KEY, extractDomainFromUrl } from "../shared/blockedSites";
 
 // const mockActivities = [
 //     { id: 1, start_date_local: "2026-01-15T10:00:00", distance: 3000, moving_time: 900, sport_type: "Run" }, // Dziś, 3km
 //     { id: 2, start_date_local: "2026-01-15T13:00:00", distance: 2000, moving_time: 600, sport_type: "Run" }, // Dziś, 2km
 //     { id: 3, start_date_local: "2026-01-15T10:00:00", distance: 5000, moving_time: 1500, sport_type: "Run" } // Wczoraj (powinno zignorować)
 // ];
-//TODO usunac po podlaczeniu do chrome.storage obslugi z frontu
-//do testow normalnie bedzie w storage pod kluczem 'blocked_sites'
-const DEFAULT_BLOCKED_SITES = ['youtube.com'];
 
-const isCurrentSiteBlocked = (blockedSites: string[]): boolean => {
-    const currentHostname = window.location.hostname; //np youtube.com
-    //sprawdzamy czy jest na lisce blokowanych
-    return blockedSites.some(site => currentHostname.includes(site));
+//uzywana do czytania listy zablokowanych stron gdy ktos wywola isCurrentSiteBlocked
+const readBlockedSites = async (): Promise<string[]> => {
+  const data = await chrome.storage.local.get([BLOCKED_SITES_KEY]);
+  const v = data?.[BLOCKED_SITES_KEY];
+  return Array.isArray(v) ? v : [];
 };
 
-const showBlocker = (progress: GoalProgress) => {
-    //jesli blokada istnieje nie dodejmu jej drugi raz
-    if (document.getElementById('fitlock-overlay')) return;
+// bierze url - wyciaga domene - pobiera liste blocked - sprawdza czy domena pasuje
+export const isCurrentSiteBlocked = async (): Promise<boolean> => {
+  const currentDomain = extractDomainFromUrl(window.location.href);
+  if (!currentDomain) return false;
 
-    const overlay = document.createElement('div');
-    overlay.id = 'fitlock-overlay';
+  const blockedSites = await readBlockedSites();
 
-    Object.assign(overlay.style, {
-        position: 'fixed',
-        width: '100vw',
-        height: '100vh',
-        zIndex: '9999999',
-        backgroundColor: 'white',
-    });
-
-    overlay.innerHTML = `
-    <div style="text-align: center;">
-        <h1>FITLOCK</h1>
-        TEST ${progress.percentage}% ${progress.currentValue}/${progress.targetValue} ${progress.unit}
-    </div>`;
-
-    document.body.appendChild(overlay);
-    document.body.style.overflow = 'hidden'; //zablokowanie scrolowania pod spodem
+  // match domeny lub subdomeny
+  return blockedSites.some((d) => currentDomain === d || currentDomain.endsWith(`.${d}`));
 };
 
-const hideBlocker = () => {
-    const overlay = document.getElementById('fitlock-overlay');
-    if (overlay) {
-        overlay.remove();
-        document.body.style.overflow = '';
-        console.log('Cel osiągniety');
+
+// sprawdza czy strona jest zablokowana jesli nie nic nie robi jesli tak przekirwouje na blocked.html
+export const checkStatus = async () => {
+  try {
+    const blocked = await isCurrentSiteBlocked();
+    if (!blocked) return;
+
+    const target = chrome.runtime.getURL("blocked.html");
+    if (window.location.href !== target) {
+      window.location.href = target;
     }
-};
-
-const checkStatus = async () => {
-    try {
-        //pobieramy wszystkie dane: aktywnosci, cel, liste stron
-        const data = await chrome.storage.local.get([
-            'today_activities',
-            'user_goal',
-            'blocked_sites'
-        ]);
-
-        const blockedSites = (data.blocked_sites || DEFAULT_BLOCKED_SITES) as string[];
-
-        if (!isCurrentSiteBlocked(blockedSites)) {
-            console.log('strona nie jest na czarnej liscie');
-            return;
-        }
-
-        console.log('STORNA NA CZARNEJ LISCIE');
-
-        //TODO odkomentowac gdy storage zostanie podlaczony
-        const activities = (data.today_activities  || []) as StravaActivity[];
-        console.log(activities);
-        //const activities = mockActivities as StravaActivity[];
-        const goal = (data.user_goal as UserGoal) || FALLBACK_GOAL;
-
-        const progress = calculateProgress(activities, goal);
-
-        if (!progress.isMet){
-            showBlocker(progress);
-        } else {
-            hideBlocker();
-        }
-    } catch (e) {
-        console.error("Błąd w sprawdzaniu statusu blokady", e);
-    }
+  } catch (e) {
+    console.error("Błąd w sprawdzaniu statusu blokady", e);
+  }
 };
 
 checkStatus();
 
+// odpala sie jak dodasz/usuniesz domene lub background wyczysci liste blocked_sites
 chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === 'local') {
-        //reagujemy na zmian eaktywnoci celu lub listy stron
-        if (changes.today_activities || changes.user_goal || changes.blocked_sites) {
-            checkStatus();
-        }
-    }
+  if (area !== "local") return;
+  if (!changes[BLOCKED_SITES_KEY]) return;
+  checkStatus();
 });
+
+// przechwytuje zmiany adresu w aplikacjach SPA (bez przeładowania strony) i po każdej takiej zmianie ponownie sprawdza, czy aktualna strona powinna zostać zablokowana.
+(function hookSpaNavigation() {
+  const fire = () => void checkStatus();
+
+  window.addEventListener("popstate", fire);
+
+  const _pushState = history.pushState;
+  history.pushState = function (...args) {
+    const ret = _pushState.apply(this, args as any);
+    fire();
+    return ret;
+  };
+
+  const _replaceState = history.replaceState;
+  history.replaceState = function (...args) {
+    const ret = _replaceState.apply(this, args as any);
+    fire();
+    return ret;
+  };
+})();

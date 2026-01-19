@@ -6,8 +6,8 @@
     "default_popup": "index.html",
     "default_icon": "logo-128.png"
   },
-  "permissions": ["identity", "storage", "tabs", "alarms"],
-  "host_permissions": ["https://www.strava.com/*"],
+  "permissions": ["identity", "storage", "tabs", "alarms", "declarativeNetRequest", "declarativeNetRequestWithHostAccess"],
+  "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "src/background/index.ts",
     "type": "module"
@@ -17,6 +17,12 @@
       "matches": ["<all_urls>"],
       "js": ["src/content/index.ts"],
       "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["blocked.html"],
+      "matches": ["<all_urls>"]
     }
   ]
 }

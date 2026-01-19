@@ -1,21 +1,30 @@
 import { useEffect, useState } from 'react';
 
+function extractDomain(url: string): string {
+  try {
+    const parsed = new URL(url);
+    return parsed.hostname.replace(/^www\./, '');
+  } catch {
+    return '';
+  }
+}
+
 export function useActiveTabUrl() {
-  const [currentUrl, setCurrentUrl] = useState<string>('');
+  const [currentDomain, setCurrentDomain] = useState<string>('');
 
   useEffect(() => {
-    // Pobieramy URL aktywnej karty (wymaga permission "tabs")
     try {
       if (chrome?.tabs?.query) {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
           const url = tabs?.[0]?.url ?? '';
-          setCurrentUrl(url);
+          const domain = extractDomain(url);
+          setCurrentDomain(domain);
         });
       }
     } catch (e) {
-      console.warn('Nie udało się pobrać URL aktywnej karty:', e);
+      console.warn('Nie udało się pobrać domeny aktywnej karty:', e);
     }
   }, []);
 
-  return { currentUrl };
+  return { currentDomain };
 }

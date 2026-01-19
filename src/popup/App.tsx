@@ -16,7 +16,7 @@ import { SettingsView } from './views/SettingsView';
 
 export default function App() {
   const { isLogged, athlete, loading, login, logout } = useAuth();
-  const { currentUrl } = useActiveTabUrl();
+  const { currentDomain } = useActiveTabUrl();
   const { toggleDarkMode } = useDarkMode();
 
   const [activeTab, setActiveTab] = useState<TabKey>('block');
@@ -49,7 +49,7 @@ export default function App() {
 
                     <div className="url-display">
                     <span className="url-label">Obecna strona:</span>
-                    <span className="url-value">{currentUrl}</span>
+                    <span className="url-value">{currentDomain}</span>
                     </div>
                 </div>
             )}
@@ -57,7 +57,7 @@ export default function App() {
             <div className="action-section">
                 {activeTab === "block" && (
                 <div className="tab-panel tab-panel-block">
-                    <BlockView />
+                    <BlockView currentDomain={currentDomain} />
                 </div>
                 )}
 
