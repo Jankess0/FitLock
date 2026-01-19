@@ -5,6 +5,12 @@ import { useUserGoal } from "./useUserGoal";
 export type GoalMetric = "distance" | "time";
 export type StravaSport = "Run" | "Ride" | "Swim";
 
+const SPORT_MAPPING: Record<StravaSport, string[]> = {
+  "Ride": ["Ride", "VirtualRide", "GravelRide", "MountainBikeRide", "EBikeRide", "Handcycle", "Velomobile"],
+  "Run": ["Run", "VirtualRun", "TrailRun"],
+  "Swim": ["Swim"]
+};
+
 type HookState = {
   loading: boolean;
   metric: GoalMetric;
@@ -46,9 +52,19 @@ export function useGoalSettings(): HookState {
     } else {
       setRawValue(String(Math.round(goal.targetValue / 60)));
     }
+    const savedSports = goal.allowedSports || [];
+    let detectedSport: StravaSport = "Run"; // Domyślnie
 
-    const first = (goal.allowedSports?.[0] as StravaSport | undefined) ?? "Run";
-    setSport(first);
+    if (savedSports.length > 0) {
+      for (const [key, types] of Object.entries(SPORT_MAPPING)) {
+        if (types.includes(savedSports[0])) {
+          detectedSport = key as StravaSport;
+          break;
+        }
+      }
+    }
+
+    setSport(detectedSport);
   }, [goal.metric, goal.targetValue, goal.allowedSports]);
 
   // jeśli useUserGoal zgłosi błąd, pokaż go też w tym hooku
@@ -77,10 +93,12 @@ export function useGoalSettings(): HookState {
       return;
     }
 
+    const activitiesList = SPORT_MAPPING[sport];
+
     const next: UserGoal = {
       metric,
       targetValue: computedTarget,
-      allowedSports: [sport], // single-choice
+      allowedSports: activitiesList,
     };
 
     try {
