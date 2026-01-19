@@ -299,9 +299,11 @@ html.dark .url-value {
 
 .bottom-nav {
   height: 74px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); 
-  padding: 10px 6px 12px;              
+  display: flex;
+  align-items: center;
+  justify-content: space-around; /* równo rozkłada */
+  gap: 6px;
+  padding: 10px 10px 12px;
   background: var(--surface-light);
   border-top: 1px solid rgba(226, 232, 240, 1);
   flex: 0 0 auto;
@@ -311,18 +313,25 @@ html.dark .bottom-nav {
   border-top-color: rgba(30, 41, 59, 1);
 }
 .nav-item {
+  flex: 1 1 0;
+  min-width: 0;
+
   border: none;
   background: transparent;
   cursor: pointer;
+
   display: grid;
   justify-items: center;
   align-content: center;
-  gap: 5px;            
+  gap: 6px;
+
   color: rgba(100, 116, 139, 1);
-  font-size: 11px;     
-  font-weight: 700;
-  padding: 6px 4px;    
+  font-size: 11px;
+  font-weight: 800;
+
+  padding: 8px 4px;
   border-radius: 14px;
+
   transition: background 120ms ease, transform 120ms ease, color 120ms ease;
 }
 .nav-item:hover {
@@ -342,8 +351,12 @@ html.dark .nav-item:hover {
 }
 .nav-label {
   line-height: 1;
-  white-space: nowrap;  
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
+
 
 .tab-view {
   animation: tabIn 180ms ease-out;

@@ -1,4 +1,4 @@
-export type TabKey = 'block' | 'focus' | 'stats' | 'settings';
+export type TabKey = 'block' | 'focus' | 'settings';
 
 export function BottomNav({
   activeTab,
@@ -25,15 +25,6 @@ export function BottomNav({
       >
         <i className="fa-solid fa-bolt nav-icon"></i>
         <span className="nav-label">Skupienie</span>
-      </button>
-
-      <button
-        className={`nav-item ${activeTab === 'stats' ? 'active' : ''}`}
-        onClick={() => onChange('stats')}
-        type="button"
-      >
-        <i className="fa-solid fa-chart-column nav-icon"></i>
-        <span className="nav-label">Statystyki</span>
       </button>
 
       <button

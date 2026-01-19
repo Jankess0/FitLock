@@ -11,7 +11,6 @@ import { useDarkMode } from './hooks/useDarkMode';
 import { LoggedOutView } from './views/LoggedOutView';
 import { BlockView } from './views/BlockView';
 import { FocusView } from './views/FocusView';
-import { StatsView } from './views/StatsView';
 import { SettingsView } from './views/SettingsView';
 
 export default function App() {
@@ -64,12 +63,6 @@ export default function App() {
                 {activeTab === "focus" && (
                 <div className="tab-panel tab-panel-focus">
                     <FocusView isActive />
-                </div>
-                )}
-
-                {activeTab === "stats" && (
-                <div className="tab-panel tab-panel-stats">
-                    <StatsView />
                 </div>
                 )}
 
