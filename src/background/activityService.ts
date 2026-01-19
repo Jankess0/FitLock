@@ -14,13 +14,26 @@ const FALLBACK_GOAL: UserGoal = {
 
 // pobiera cel użytkownika ze storage lub inicjalizuje go domyślną wartością
 async function getOrInitGoal(): Promise<UserGoal> {
-  const { [USER_GOAL_KEY]: goalRaw } = await chrome.storage.local.get(USER_GOAL_KEY);
+  const data = await chrome.storage.local.get([USER_GOAL_KEY]);
+  const stored = data?.[USER_GOAL_KEY] as UserGoal | undefined;
 
-  if (goalRaw) return goalRaw as UserGoal;
+  if (stored && stored.metric && stored.targetValue) return stored;
 
   // ustawiamy fallback, bo użytkownik nie podał celu
   await chrome.storage.local.set({ [USER_GOAL_KEY]: FALLBACK_GOAL });
   return FALLBACK_GOAL;
+}
+
+// TODO odkomentować po testach zeby działało tylko na aktywnościach z bieżącego dnia
+// function isTodayLocal(start_date_local: string): boolean {
+//   // start_date_local zwykle: "YYYY-MM-DDTHH:mm:ssZ" lub bez Z
+//   const datePart = (start_date_local || "").slice(0, 10); // YYYY-MM-DD
+//   const today = new Date().toLocaleDateString("en-CA");   // YYYY-MM-DD w lokalnym TZ
+//   return datePart === today;
+// }
+
+function activityType(activity: StravaActivity): string {
+  return (activity.sport_type || activity.type || "").trim();
 }
 
 export const fetchActivities = async (): Promise<void> => {
@@ -68,9 +81,15 @@ export const fetchActivities = async (): Promise<void> => {
             type: item.type
         }));
 
+        //TODO odkomentowac po testach
+        //const todayActivities = activities.filter((a) => isTodayLocal(a.start_date_local));
+
+        //TODO a to usunac
+        const todayActivities = activities; //tymczasowo bierzemy wszystkie do testów
+
         //zapis listy aktywnosci do chrome.storage
         await chrome.storage.local.set({
-            'today_activities': activities,
+            'today_activities': todayActivities,
             'last_fetch_time': Date.now()
         });
 
@@ -84,7 +103,13 @@ export const fetchActivities = async (): Promise<void> => {
         //     isMet: true,
         //     unit: goal.metric === "distance" ? "m" : "s"
         // };
-        const progress = calculateProgress(activities, goal);
+        const allowed = goal.allowedSports || [];
+        const filteredForGoal =
+            allowed.length === 0
+                ? todayActivities
+                : todayActivities.filter((a) => allowed.includes(activityType(a)));
+
+        const progress = calculateProgress(filteredForGoal, goal);
         await chrome.storage.local.set({
             [GOAL_PROGRESS_KEY]: progress,
         });
