@@ -1,27 +1,27 @@
 import { STRAVA_CONFIG } from "../shared/config.ts";
-import type { StravaActivity, UserGoal } from "../shared/types.ts";
-import { calculateProgress } from "../shared/utils.ts";
-import { BLOCKED_SITES_KEY } from "../shared/blockedSites";
+import type { StravaActivity} from "../shared/types.ts";
+// import { calculateProgress } from "../shared/utils.ts";
+// import { BLOCKED_SITES_KEY } from "../shared/blockedSites";
 
-const USER_GOAL_KEY = "user_goal";
-const GOAL_PROGRESS_KEY = "goal_progress";
-
-const FALLBACK_GOAL: UserGoal = {
-  metric: "distance",
-  targetValue: 5000,
-  allowedSports: []
-};
+// const USER_GOAL_KEY = "user_goal";
+// // const GOAL_PROGRESS_KEY = "goal_progress";
+//
+// const FALLBACK_GOAL: UserGoal = {
+//   metric: "distance",
+//   targetValue: 5000,
+//   allowedSports: []
+// };
 
 // pobiera cel użytkownika ze storage lub inicjalizuje go domyślną wartością
-async function getOrInitGoal(): Promise<UserGoal> {
-  const { [USER_GOAL_KEY]: goalRaw } = await chrome.storage.local.get(USER_GOAL_KEY);
-
-  if (goalRaw) return goalRaw as UserGoal;
-
-  // ustawiamy fallback, bo użytkownik nie podał celu
-  await chrome.storage.local.set({ [USER_GOAL_KEY]: FALLBACK_GOAL });
-  return FALLBACK_GOAL;
-}
+// async function getOrInitGoal(): Promise<UserGoal> {
+//   const { [USER_GOAL_KEY]: goalRaw } = await chrome.storage.local.get(USER_GOAL_KEY);
+//
+//   if (goalRaw) return goalRaw as UserGoal;
+//
+//   // ustawiamy fallback, bo użytkownik nie podał celu
+//   await chrome.storage.local.set({ [USER_GOAL_KEY]: FALLBACK_GOAL });
+//   return FALLBACK_GOAL;
+// }
 
 export const fetchActivities = async (): Promise<void> => {
     try{
@@ -73,24 +73,6 @@ export const fetchActivities = async (): Promise<void> => {
             'today_activities': activities,
             'last_fetch_time': Date.now()
         });
-
-        const goal = await getOrInitGoal();
-
-        //TEST do sprawdzenia czy odblokowuje
-        // const progress = {
-        //     currentValue: goal.targetValue,
-        //     targetValue: goal.targetValue,
-        //     percentage: 100,
-        //     isMet: true,
-        //     unit: goal.metric === "distance" ? "m" : "s"
-        // };
-        const progress = calculateProgress(activities, goal);
-        await chrome.storage.local.set({
-            [GOAL_PROGRESS_KEY]: progress,
-        });
-        if (progress.isMet) {
-            await chrome.storage.local.set({ [BLOCKED_SITES_KEY]: [] });
-        }
         
     } catch (error){
         console.error("Failed to load data:", error);
